@@ -1,6 +1,6 @@
-.PHONY: build test clean release
+.PHONY: build test clean help
 
-VERSION := $(shell cat VERSION)
+VERSION := $(shell cat VERSION 2>/dev/null || echo dev)
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
 # Build binary
@@ -19,16 +19,6 @@ clean:
 	@rm -f rf-migrate
 	@rm -rf dist
 
-# Create a new release tag
-release:
-	@echo "Current version: $(VERSION)"
-	@read -p "Enter new version: " VERSION; \
-	echo $$VERSION > VERSION; \
-	git add VERSION; \
-	git commit -m "Bump version to $$VERSION"; \
-	git tag -a v$$VERSION -m "Version $$VERSION"; \
-	echo "Run 'git push && git push --tags' to publish"
-
 # Install from source
 install:
 	@echo "Installing rf-migrate..."
@@ -39,4 +29,22 @@ test-postgres:
 	@echo "Running with local PostgreSQL..."
 	@export DATABASE_URL="postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable" && \
 	export RF_MIGRATION_DIR="./test/migrations" && \
-	go run main.go config 
+	go run main.go config
+
+# Show help for using semantic commits
+help:
+	@echo "RF-Migrate uses semantic-release for versioning"
+	@echo ""
+	@echo "To trigger releases, use semantic commit messages:"
+	@echo "  feat: add new feature (triggers MINOR version bump)"
+	@echo "  fix: fix a bug (triggers PATCH version bump)"
+	@echo "  docs: documentation changes only"
+	@echo "  style: formatting, missing semi colons, etc"
+	@echo "  refactor: code change that neither fixes a bug nor adds a feature"
+	@echo "  perf: code change that improves performance"
+	@echo "  test: adding missing tests"
+	@echo "  chore: updating build tasks, package manager configs, etc"
+	@echo ""
+	@echo "Breaking changes (trigger MAJOR version bump):"
+	@echo "  feat!: add feature with breaking change"
+	@echo "  or include 'BREAKING CHANGE:' in commit body" 

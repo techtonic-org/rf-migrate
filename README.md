@@ -57,6 +57,22 @@ migrate-commit:
 	@DATABASE_URL=$(DB_URL) RF_MIGRATION_DIR=$(MIGRATIONS_DIR) go run github.com/techtonic-org/rf-migrate commit --name "$(name)"
 ```
 
+## Development
+
+### Semantic Versioning and Releases
+
+This project uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically determine the version number and publish releases. New versions are automatically released when changes are pushed to the main branch.
+
+To trigger specific types of releases, use the following commit message format:
+
+- `feat: add new feature` - Triggers a MINOR version bump (e.g., 1.1.0 → 1.2.0)
+- `fix: fix a bug` - Triggers a PATCH version bump (e.g., 1.1.0 → 1.1.1)
+- `feat!: add feature with breaking change` - Triggers a MAJOR version bump (e.g., 1.1.0 → 2.0.0)
+
+Other commit types (docs, style, refactor, perf, test, chore) won't trigger a new release.
+
+Run `make help` to see a full list of supported commit types and formats.
+
 ## Usage
 
 ### Configuration
