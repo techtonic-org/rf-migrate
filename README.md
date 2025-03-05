@@ -1,6 +1,6 @@
 # RF-Migrate
 
-A simple, powerful database migration tool for PostgreSQL.
+A simple, powerful roll-forward database migration tool for PostgreSQL written in Go. Inspired by [graphile-migrate](https://github.com/graphile/migrate).
 
 ## Features
 
@@ -194,13 +194,13 @@ Migrations should be idempotent, typically using `IF EXISTS` and `IF NOT EXISTS`
 
 ```sql
 -- Drop if exists
-DROP TABLE IF EXISTS users;
+drop table if exists users;
 
 -- Create new
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+create table if not exists users (
+  id serial primary key,
+  username varchar(255) not null unique,
+  created_at timestamp not null default now()
 );
 ```
 
