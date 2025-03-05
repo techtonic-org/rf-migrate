@@ -1,0 +1,15 @@
+{
+  "maintainerName": "techtonic-org",
+  "maintainerEmail": "admin@example.com",
+  "plugins": {
+    "commit-analyzer": {
+      "name": "default"
+    },
+    "changelog-generator": {
+      "name": "default"
+    },
+    "ci-condition": {
+      "name": "default"
+    }
+  }
+} 

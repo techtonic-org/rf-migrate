@@ -25,30 +25,29 @@ jobs:
         with:
           go-version: '1.24'
       
-      - name: Install semantic-release
-        run: |
-          npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
-
       - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          semantic-release
+        uses: go-semantic-release/action@v1
+        id: semrel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-initial-development-versions: true
+          changelog-file: CHANGELOG.md
+          update-file: VERSION
 
       - name: Build binaries
-        if: ${{ env.RELEASED == 'true' }}
+        if: steps.semrel.outputs.version != ''
         run: |
           mkdir -p dist
-          VERSION="${SEMANTIC_VERSION#v}"
+          VERSION="${{ steps.semrel.outputs.version }}"
           GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${VERSION}" -o dist/rf-migrate-linux-amd64
           GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.version=${VERSION}" -o dist/rf-migrate-darwin-amd64
           GOOS=darwin GOARCH=arm64 go build -ldflags "-X main.version=${VERSION}" -o dist/rf-migrate-darwin-arm64
           GOOS=windows GOARCH=amd64 go build -ldflags "-X main.version=${VERSION}" -o dist/rf-migrate-windows-amd64.exe
       
       - name: Attach binaries to release
-        if: ${{ env.RELEASED == 'true' }}
+        if: steps.semrel.outputs.version != ''
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.SEMANTIC_VERSION }}
+          tag_name: v${{ steps.semrel.outputs.version }}
           files: |
             dist/* 

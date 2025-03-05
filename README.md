@@ -23,7 +23,48 @@ Visit the [releases page](https://github.com/techtonic-org/rf-migrate/releases) 
 
 ### Using as a Tool in Another Go Project
 
-To add rf-migrate as a tool dependency in your Go project:
+#### For Go 1.24+ (Recommended)
+
+Go 1.24 introduces the new `tool` directive that simplifies managing tool dependencies:
+
+```bash
+# Add rf-migrate as a tool dependency
+go get -tool github.com/techtonic-org/rf-migrate@latest
+
+# Use it directly with go tool
+go tool rf-migrate migrate
+```
+
+This will add a tool directive to your `go.mod` file:
+
+```
+tool github.com/techtonic-org/rf-migrate v1.2.3
+```
+
+You can now run rf-migrate directly using `go tool rf-migrate` in your Makefile:
+
+```makefile
+# Default database connection URL and migrations directory
+DB_URL ?= postgres://postgres:postgres@localhost:5432/myapp?sslmode=disable
+MIGRATIONS_DIR ?= ./db/migrations
+
+migrate:
+	@echo "Applying migrations..."
+	@DATABASE_URL=$(DB_URL) RF_MIGRATION_DIR=$(MIGRATIONS_DIR) go tool rf-migrate migrate
+
+migrate-watch:
+	@echo "Watching migrations..."
+	@DATABASE_URL=$(DB_URL) RF_MIGRATION_DIR=$(MIGRATIONS_DIR) go tool rf-migrate watch
+
+migrate-commit:
+	@if [ -z "$(name)" ]; then echo "Error: migration name required. Use 'make migrate-commit name=migration_name'"; exit 1; fi
+	@echo "Committing migration: $(name)"
+	@DATABASE_URL=$(DB_URL) RF_MIGRATION_DIR=$(MIGRATIONS_DIR) go tool rf-migrate commit --name "$(name)"
+```
+
+#### For Go <1.24 (Legacy Approach)
+
+For older Go versions, use the tools.go approach:
 
 1. Create a `tools/tools.go` file:
 ```go
@@ -61,7 +102,7 @@ migrate-commit:
 
 ### Semantic Versioning and Releases
 
-This project uses [semantic-release](https://github.com/semantic-release/semantic-release) to automatically determine the version number and publish releases. New versions are automatically released when changes are pushed to the main branch.
+This project uses [go-semantic-release](https://github.com/go-semantic-release/semantic-release) to automatically determine the version number and publish releases. New versions are automatically released when changes are pushed to the main branch.
 
 To trigger specific types of releases, use the following commit message format:
 

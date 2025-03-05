@@ -33,7 +33,7 @@ test-postgres:
 
 # Show help for using semantic commits
 help:
-	@echo "RF-Migrate uses semantic-release for versioning"
+	@echo "RF-Migrate uses go-semantic-release for versioning"
 	@echo ""
 	@echo "To trigger releases, use semantic commit messages:"
 	@echo "  feat: add new feature (triggers MINOR version bump)"
