@@ -7,12 +7,27 @@
 *.dll
 *.so
 *.dylib
+rf-migrate
 
 # Test binary, built with `go test -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Distribution directory
+dist/
+
+# Local development files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# Local configuration
+rfmigrate.yaml
+rfmigrate.json
+!test/rfmigrate.yaml
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
