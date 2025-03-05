@@ -72,12 +72,6 @@ func ensureMigrationDir(dir string) error {
 		return fmt.Errorf("failed to create migration directory: %w", err)
 	}
 
-	// Create migrations subdirectory
-	migrationsDir := filepath.Join(dir, "migrations")
-	if err := os.MkdirAll(migrationsDir, 0755); err != nil {
-		return fmt.Errorf("failed to create migrations subdirectory: %w", err)
-	}
-
 	// Create current.sql if it doesn't exist
 	currentSqlPath := filepath.Join(dir, "current.sql")
 	if _, err := os.Stat(currentSqlPath); os.IsNotExist(err) {

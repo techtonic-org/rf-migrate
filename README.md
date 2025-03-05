@@ -150,7 +150,9 @@ RF-Migrate can be configured in multiple ways (in order of precedence):
 
 #### Initialize
 
-First, set up your migration directory structure:
+The tool will automatically create the migration directory and an empty `current.sql` file if they don't exist. 
+
+However, you can also manually set up your migration directory structure:
 
 ```bash
 mkdir -p migrations
@@ -170,7 +172,7 @@ touch migrations/current.sql
    ```bash
    rf-migrate commit --name "add_users_table"
    ```
-   This creates a timestamped migration file like `20231010123045_add_users_table.sql`
+   This creates a timestamped migration file like `20231010123045_add_users_table.sql` in the same directory as `current.sql`
 
 4. **Uncommit** if needed:
    ```bash
@@ -186,7 +188,7 @@ Apply all migrations:
 rf-migrate migrate
 ```
 
-This applies all migration files that haven't been applied yet.
+This applies all timestamped migration files in the specified migration directory that haven't been applied yet.
 
 ## Migration Format
 

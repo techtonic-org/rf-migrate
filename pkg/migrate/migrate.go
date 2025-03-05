@@ -32,7 +32,7 @@ func NewMigrator(database db.DB, migrationDir string) (*Migrator, error) {
 		DB:            database,
 		MigrationDir:  migrationDir,
 		CurrentSQL:    filepath.Join(migrationDir, "current.sql"),
-		MigrationsDir: filepath.Join(migrationDir, "migrations"),
+		MigrationsDir: migrationDir,
 	}, nil
 }
 
@@ -257,7 +257,7 @@ func getFiles(dir string) ([]string, error) {
 
 	var files []string
 	for _, entry := range entries {
-		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".sql") {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".sql") && entry.Name() != "current.sql" {
 			files = append(files, entry.Name())
 		}
 	}
